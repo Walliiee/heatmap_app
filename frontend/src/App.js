@@ -11,7 +11,6 @@ function App() {
     formData.append("file", file);
 
     try {
-      // POST to the /api/heatmap route
       const response = await fetch("http://127.0.0.1:8000/api/heatmap", {
         method: "POST",
         body: formData,
@@ -27,7 +26,6 @@ function App() {
       const imageBlob = await response.blob();
       const imageObjectURL = URL.createObjectURL(imageBlob);
 
-      setHeatmapImage(imageObjectURL);
     } catch (error) {
       console.error("Error generating heatmap:", error);
     }
@@ -36,10 +34,7 @@ function App() {
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
       <h1>React + FastAPI</h1>
-      {/* Remove the message display */}
-      {/* <p>{message || "Loading..."}</p> */}
   
-      {/* Add a label for accessibility */}
       <label htmlFor="file-upload" style={{ display: "block", marginBottom: "10px" }}>
         Upload a JSON File
       </label>

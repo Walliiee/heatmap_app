@@ -1,7 +1,6 @@
 from fastapi import APIRouter, UploadFile, HTTPException
 from fastapi.responses import StreamingResponse
 import pandas as pd
-import plotly.express as px
 import io
 import json
 import pytz
@@ -16,14 +15,6 @@ def parse_json(contents):
     Returns a DataFrame with 'timestamp' and 'text' columns.
     """
     data = json.loads(contents)
-
-    # 1. ChatGPT with 'mapping' (wrapped in a list)
-    if (
-        isinstance(data, list)
-        and len(data) > 0
-        and isinstance(data[0], dict)
-        and "mapping" in data[0]
-    ):
         rows = []
         for conversation in data:
             mapping = conversation.get("mapping", {})
@@ -68,12 +59,6 @@ def parse_json(contents):
             })
         return pd.DataFrame(rows)
 
-    # 4. Fallback for a list of dicts with "timestamp" and "text"
-    if isinstance(data, list):
-        return pd.DataFrame(data)
-
-    raise ValueError("Unsupported JSON structure. Cannot parse 'timestamp'/'text'.")
-
 @router.post("/api/heatmap")
 async def generate_heatmap(file: UploadFile):
     try:
@@ -87,10 +72,7 @@ async def generate_heatmap(file: UploadFile):
         if 'timestamp' not in df.columns or 'text' not in df.columns:
             raise HTTPException(status_code=400, detail="Parsed data must contain 'timestamp' and 'text' fields.")
 
-        # 4. Usage metric (length of text)
         df['usage'] = df['text'].apply(len)
-
-        # 5. Convert timestamp to datetime
         df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
         df = df.dropna(subset=['timestamp'])
         if df.empty:
@@ -131,7 +113,6 @@ async def generate_heatmap(file: UploadFile):
         return StreamingResponse(img_bytes, media_type="image/png")
 
     except ValueError as ve:
-        print(f"ValueError: {ve}")
         raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
         print(f"Error generating heatmap: {e}")
