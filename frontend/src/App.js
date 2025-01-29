@@ -1,16 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 function App() {
-  const [message, setMessage] = useState("");
   const [heatmapImage, setHeatmapImage] = useState(null);
-
-  useEffect(() => {
-    // Fetch data from the FastAPI backend to confirm it's running
-    fetch("http://127.0.0.1:8000/")
-      .then((response) => response.json())
-      .then((data) => setMessage(data.message))
-      .catch((error) => console.error("Error fetching data:", error));
-  }, []);
 
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
@@ -45,7 +36,8 @@ function App() {
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
       <h1>React + FastAPI</h1>
-      <p>{message || "Loading..."}</p>
+      {/* Remove the message display */}
+      {/* <p>{message || "Loading..."}</p> */}
   
       {/* Add a label for accessibility */}
       <label htmlFor="file-upload" style={{ display: "block", marginBottom: "10px" }}>
