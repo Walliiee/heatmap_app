@@ -15,5 +15,6 @@ matplotlib==3.7.2
 pandas==2.1.1
 numpy==1.26.0
 pytz==2023.3
+plotly==5.3.1
 python-multipart==0.0.5
-kaleido==0.2.1  # Add this line
+kaleido==0.2.1  // Add this line
